@@ -2,35 +2,34 @@
 require('dotenv').config()
 const express = require('express');
 const bodyParser = require('body-parser');
-const dbConfig = require('./config/database.config.js');
 const mongoose = require('mongoose');
 
-// create express app
 const app = express();
+
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
-  });
+});
 
 // routes
 require('./app/routes/messages.routes.js')(app);
 
 // database
 mongoose.Promise = global.Promise;
-mongoose.connect(dbConfig.url, {
+mongoose.connect(process.env.MONGO, {
     useNewUrlParser: true,
-    dbName: 'prod'
+    dbName: process.env.DB
 }).then(() => {
-    console.log("Successfully connected to the database");    
+    console.log("Successfully connected to the database");
 }).catch(err => {
     console.log('Could not connect to the database. Exiting now...', err);
     process.exit();
 });
 
-// listen for requests
-app.listen(3000, () => {
-    console.log("Server is listening on port 3000");
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log("Server is listening on port " + port);
 });

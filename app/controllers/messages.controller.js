@@ -1,5 +1,4 @@
 const messages = require('../models/message.model');
-const mongoose = require('mongoose');
 
 // total count
 exports.count = (req, res) => {

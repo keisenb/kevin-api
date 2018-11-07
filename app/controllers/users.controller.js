@@ -1,6 +1,4 @@
 const messages = require('../models/message.model');
-const mongoose = require('mongoose');
-
 
 // top users
 exports.top = (req, res) => {
