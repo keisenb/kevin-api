@@ -5,4 +5,6 @@ module.exports = (app) => {
     app.get('/messages/count', messages.count);
     app.get('/messages/top', messages.top);
     app.get('/users/top', users.top);
+    app.get('/users/count', users.count);
+
 }

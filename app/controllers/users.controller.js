@@ -13,3 +13,16 @@ exports.top = (req, res) => {
         });
     })
 }
+
+
+// count of users
+exports.count = (req, res) => {
+    messages.distinct("username")
+    .then(result => {
+        res.json({ users: result.length });
+    }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving top."
+        });
+    })
+}
