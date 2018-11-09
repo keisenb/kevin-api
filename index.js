@@ -3,6 +3,21 @@ require('dotenv').config()
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+var jwt = require('express-jwt');
+var jwks = require('jwks-rsa');
+
+var jwtCheck = jwt({
+    secret: jwks.expressJwtSecret({
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: 5,
+        jwksUri: process.env.JWKS_URI
+    }),
+    audience: process.env.AUDIENCE,
+    issuer: process.env.ISSUER,
+    algorithms: ['RS256']
+});
+
 
 const app = express();
 
@@ -10,9 +25,11 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     next();
 });
+app.use(jwtCheck);
+
 
 // routes
 require('./app/routes/messages.routes.js')(app);
